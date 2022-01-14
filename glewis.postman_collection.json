@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "a79c8276-71fe-4a04-a31d-47ea271826ad",
+		"name": "Shopify-S22-George-Lewis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get item",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/item/:id",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"item",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "item id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/item?limit=5",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"item"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 0,\r\n    \"weight\": 4,\r\n    \"value\": 33,\r\n    \"transport\": \"Air\",\r\n    \"dimensions\": {\r\n        \"width\": 4,\r\n        \"height\": 5,\r\n        \"depth\": 2\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_uri}}/item",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"item"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete item",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/item/:id",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"item",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2",
+							"description": "item id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get items csv",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/item/csv?limit=5",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"item",
+						"csv"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create warehouse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"items\": [0]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_uri}}/warehouse",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get warehouses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse?limit=5",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get warehouse",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse/:id",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0",
+							"description": "warehouse id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get warehouses csv",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse/csv?limit=5",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse",
+						"csv"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item to warehouse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse/:id/add?id=0",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse",
+						":id",
+						"add"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0",
+							"description": "item id to add"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0",
+							"description": "warehouse id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove item from warehouse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse/:id/remove?id=1",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse",
+						":id",
+						"remove"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "item id to remove"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0",
+							"description": "warehouse id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete warehouse",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse/:id",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0",
+							"description": "warehouse id"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
