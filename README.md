@@ -56,7 +56,7 @@ If it's a Diesel/database issue, please check your PG install, and the Diesel ge
 
 ## Using it
 
-I have provided a Postman collection for your convenience.
+I have provided a Postman collection and environment for your convenience. Please feel free to import it and test out a few endpoints.
 
 The server is hard-coded to bind to `127.0.0.1:8087`, if that doesn't work for you may modify it in `main.rs`.
 
