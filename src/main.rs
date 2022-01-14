@@ -14,7 +14,7 @@ pub mod schema;
 pub mod service;
 pub mod util;
 
-use actix_web::{error::InternalError, web, App, HttpResponse, HttpServer, middleware::Logger};
+use actix_web::{error::InternalError, middleware::Logger, web, App, HttpResponse, HttpServer};
 
 use diesel::{pg::PgConnection, r2d2::ConnectionManager};
 use dotenv::dotenv;
@@ -43,7 +43,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-        .wrap(Logger::default())
+            .wrap(Logger::default())
             .data(pool.clone())
             .app_data(web::JsonConfig::default().error_handler(|err, _| {
                 let fmt = format!("{}", &err);
