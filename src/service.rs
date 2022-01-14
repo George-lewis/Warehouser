@@ -105,8 +105,7 @@ pub fn delete_item(conn: &PgConnection, item_id: i32) -> Result<InventoryItem> {
     let item = db::get_item(conn, item_id)?;
 
     if let Some(w_id) = item.warehouse {
-        // Stubbed
-        warehouse_remove_item(conn, w_id, item_id).ok();
+        warehouse_remove_item(conn, w_id, item_id)?;
     }
 
     Ok(db::delete_item(conn, item_id)?)
