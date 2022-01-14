@@ -31,7 +31,7 @@ Only a few more steps!
 The Diesel CLI will actually create our database for us, but first you need to modify the .env file.
 In there you'll see this:
 
-DATABASE_URL=postgres://glewis:glewis@localhost/warehouser
+`DATABASE_URL=postgres://glewis:glewis@localhost/warehouser`
 
 I need you to replace the first `glewis` with your (PG) account's username, and the second with the password.
 The last bit is the name of the database, feel free to change it, or not.
