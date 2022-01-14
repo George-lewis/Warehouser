@@ -38,20 +38,9 @@ The last bit is the name of the database, feel free to change it, or not.
 
 Now you can run `diesel setup` from the project root. This should create the database for us and
 run some SQL commands (the ones defined in ./migrations)
-and get us set up. In these steps Diesel will generate the `schema.rs` file, and unfortunately _it won't be correct_
-for our usecase. I need you to modify the file.
+and get us set up.
 
-You'll see this definition:
-
-```rs
-...
-    transport -> Transport,
-    dimensions -> Dimensions,
-...
-```
-
-Please replace `Transport` with `PgTransport` and `Dimensions` with `PgDimensions`.
-*It will not compile otherwise*
+If Diesel decides to regenerate the `schema.rs` file, please revert it to as it is in the repository, because Diesel will generate it incorrectly and cause the program to not compile.
 
 Okay great, we should be ready to go.
 Go ahead and run `cargo run` in the project root, or `cargo run --release` if you wan't it to be extra speedy
