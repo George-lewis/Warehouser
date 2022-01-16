@@ -1,12 +1,13 @@
-use std::{fmt::Display, str::FromStr};
+use std::{fmt::Display, str::FromStr, borrow::Cow};
 
+use actix_web::http::StatusCode;
 use diesel::{
     backend::Backend,
     pg::Pg,
     serialize::WriteTuple,
     sql_types::{SmallInt, Text},
     types::{FromSql, Record, ToSql},
-    AsExpression, FromSqlRow, Insertable, Queryable,
+    AsExpression, FromSqlRow, Insertable, Queryable, result::DatabaseErrorInformation,
 };
 
 use crate::schema::{inventory, warehouses};
@@ -14,31 +15,58 @@ use serde::{Deserialize, Serialize};
 
 use diesel::result::Error as DError;
 
-pub enum Error {
-    Service(String),
-    Db(diesel::result::Error),
+pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Debug)]
+pub struct Error {
+    pub code: StatusCode,
+    pub msg: String
 }
 
 impl From<diesel::result::Error> for Error {
     fn from(e: diesel::result::Error) -> Self {
-        Self::Db(e)
+        let (code, msg) = match e {
+            DError::DatabaseError(UniqueViolation, info) => {
+                let msg  = if let Some(col) = info.column_name() {
+                    format!("Uniqueness violation on column {col}; {}", info.message())
+                } else {
+                    format!("Uniqueness violation: {}", info.message())
+                };
+                (StatusCode::BAD_REQUEST, msg)
+            },
+            DError::DatabaseError(_, info) => (StatusCode::INTERNAL_SERVER_ERROR, info.message().to_string()),
+            DError::NotFound => (StatusCode::NOT_FOUND, "Item not found".to_string()),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR, "Unknown database error".to_string())
+        };
+        Error { code, msg }
     }
 }
 
-impl Error {
-    pub fn get_msg(self) -> String {
+// Extension trait for `std::result::Result<T, Error>`
+pub trait NotFound<T> {
+    fn not_found(self, fnmsg: impl Fn() -> String) -> Result<T>;
+}
+
+impl<T> NotFound<T> for Result<T> {
+    fn not_found(self, fnmsg: impl Fn() -> String) -> Result<T> {
         match self {
-            Error::Service(msg) => msg,
-            Error::Db(err) => match err {
-                DError::DatabaseError(_, info) => info.message().to_string(),
-                DError::NotFound => "Item not found".to_string(),
-                _ => "Unknown db error".to_string(),
+            Ok(t) => Ok(t),
+            Err(e) => {
+                // This is a little loose, but works well enough
+                // with more time a better error model could be developed
+                if e.code == StatusCode::NOT_FOUND {
+                    let err = Error {
+                        code: StatusCode::NOT_FOUND,
+                        msg: fnmsg()
+                    };
+                    Err(err)
+                } else {
+                    Err(e)
+                }
             },
         }
     }
 }
-
-pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, Clone, FromSqlRow, AsExpression, PartialEq, Serialize, Deserialize)]
 #[sql_type = "PgTransport"]

@@ -66,10 +66,12 @@ async fn main() -> std::io::Result<()> {
                             .service(warehouse_csv)
                             .service(warehouse_add_item)
                             .service(warehouse_remove_item)
+                            .service(warehouse_get_items)
                             .service(create_warehouse)
                             .service(get_warehouse)
                             .service(get_warehouses)
-                            .service(delete_warehouse),
+                            .service(delete_warehouse)
+                            .service(update_warehouse)
                     ),
             )
     })
