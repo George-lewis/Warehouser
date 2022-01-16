@@ -171,9 +171,7 @@ pub async fn warehouse_get_items(
     request(
         pool,
         serde_json::to_string_pretty,
-        move |conn| {
-            service::warehouse_get_items(conn, path.id, query.limit())
-        },
+        move |conn| service::warehouse_get_items(conn, path.id, query.limit()),
         StatusCode::OK,
     )
     .await
