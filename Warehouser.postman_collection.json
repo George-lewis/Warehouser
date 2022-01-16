@@ -60,7 +60,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 0,\r\n    \"weight\": 4,\r\n    \"value\": 33,\r\n    \"transport\": \"Air\",\r\n    \"dimensions\": {\r\n        \"width\": 4,\r\n        \"height\": 5,\r\n        \"depth\": 2\r\n    }\r\n}",
+					"raw": "{\r\n    \"id\": 3,\r\n    \"weight\": 4,\r\n    \"value\": 33,\r\n    \"transport\": \"Air\",\r\n    \"dimensions\": {\r\n        \"width\": 4,\r\n        \"height\": 5,\r\n        \"depth\": 2\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -96,7 +96,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "2",
+							"value": "3",
 							"description": "item id"
 						}
 					]
@@ -135,7 +135,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 2,\r\n    \"items\": [0]\r\n}",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"items\": []\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -232,7 +232,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{base_uri}}/warehouse/:id/add?id=0",
+					"raw": "{{base_uri}}/warehouse/:id/add?id=3",
 					"host": [
 						"{{base_uri}}"
 					],
@@ -244,14 +244,14 @@
 					"query": [
 						{
 							"key": "id",
-							"value": "0",
+							"value": "3",
 							"description": "item id to add"
 						}
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "0",
+							"value": "2",
 							"description": "warehouse id"
 						}
 					]
@@ -265,7 +265,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{base_uri}}/warehouse/:id/remove?id=1",
+					"raw": "{{base_uri}}/warehouse/:id/remove?id=3",
 					"host": [
 						"{{base_uri}}"
 					],
@@ -277,14 +277,14 @@
 					"query": [
 						{
 							"key": "id",
-							"value": "1",
+							"value": "3",
 							"description": "item id to remove"
 						}
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "0",
+							"value": "2",
 							"description": "warehouse id"
 						}
 					]
@@ -312,6 +312,83 @@
 							"value": "0",
 							"description": "warehouse id"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get warehouse items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/warehouse/:id/items",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse",
+						":id",
+						"items"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update warehouse",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"items\": [2]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_uri}}/warehouse",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update item",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 3,\r\n    \"warehouse\": 2,\r\n    \"weight\": 4,\r\n    \"value\": 33,\r\n    \"transport\": \"Sea\",\r\n    \"dimensions\": {\r\n        \"width\": 4,\r\n        \"height\": 5,\r\n        \"depth\": 3\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_uri}}/item",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"item"
 					]
 				}
 			},
