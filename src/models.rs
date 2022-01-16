@@ -33,6 +33,9 @@ impl From<diesel::result::Error> for Error {
                 } else {
                     format!("Uniqueness violation: {}", info.message())
                 };
+
+                // Because it's the clients server to pick an id (limitation)
+                // it's on them to provide a unique one
                 (StatusCode::BAD_REQUEST, msg)
             }
             DError::DatabaseError(_, info) => (
@@ -55,22 +58,22 @@ pub trait NotFound<T> {
 }
 
 impl<T> NotFound<T> for Result<T> {
+    /// Map a not-found error to a new error message, generated lazily by `fnmsg`
     fn not_found(self, fnmsg: impl Fn() -> String) -> Result<T> {
-        match self {
-            Ok(t) => Ok(t),
-            Err(e) => {
-                // This is a little loose, but works well enough
-                // with more time a better error model could be developed
-                if e.code == StatusCode::NOT_FOUND {
-                    let err = Error {
-                        code: StatusCode::NOT_FOUND,
-                        msg: fnmsg(),
-                    };
-                    Err(err)
-                } else {
-                    Err(e)
-                }
-            }
+        if let Err(Error {
+            code: StatusCode::NOT_FOUND,
+            ..
+        }) = self
+        {
+            // Patch over the error message
+            // This is a little loose
+            // with more time a better error model could be developed
+            Err(Error {
+                code: StatusCode::NOT_FOUND,
+                msg: fnmsg(),
+            })
+        } else {
+            self
         }
     }
 }

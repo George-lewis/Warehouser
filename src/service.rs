@@ -99,7 +99,12 @@ pub fn delete_item(conn: &PgConnection, item_id: i32) -> Result<InventoryItem> {
         warehouse_remove_item(conn, w_id, item_id)?;
     }
 
-    db::delete_item(conn, item_id)
+    // If we returned the result of this
+    // we would be potentially be incorrectly showing
+    // the item as being in no warehouse
+    db::delete_item(conn, item_id)?;
+
+    Ok(item)
 }
 
 pub fn create_item(conn: &PgConnection, item: &InventoryItem) -> Result<InventoryItem> {
