@@ -1,3 +1,9 @@
+# Warehouser
+
+This project created for the Shopify Summer 2022 Backend Developer Challenge
+
+---
+
 Hello Shopify Reviewer
 
 My name is George Lewis, and thank you for taking a look at my project.
@@ -9,7 +15,7 @@ I'm very fond of Rust and decided to challenge myself to something new by buildi
 I have experience building backend in other languages, like Python, but I must say that I quite enjoyed this.
 The learning curve was a little steep, but once I got going, it was pretty amazing.
 
-Alrght let's get it set up.
+Alright let's get it set up.
 
 ## Setting up
 
