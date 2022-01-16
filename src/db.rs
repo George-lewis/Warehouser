@@ -7,7 +7,7 @@ use crate::diesel::ExpressionMethods;
 // it could fairly easily be reduced by creating a macro
 // or something else?
 use diesel::dsl::any;
-use diesel::{PgConnection, QueryDsl, RunQueryDsl, Identifiable};
+use diesel::{PgConnection, QueryDsl, RunQueryDsl};
 
 use crate::models::{InventoryItem, Result, Warehouse};
 

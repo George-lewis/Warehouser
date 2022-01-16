@@ -7,12 +7,12 @@ use diesel::PgConnection;
 // this indirection allows us to modify the internal behaviour of the functions
 // in this layer, without breaking the api layer or any other dependents
 pub use crate::db::*;
-use crate::{db, models::Warehouse, models::NotFound};
+use crate::{db, models::NotFound, models::Warehouse};
 
 /// Add an item to a warehouse
 pub fn warehouse_add_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Result<Warehouse> {
-    let mut item = db::get_item(conn, item_id)
-    .not_found(|| format!("Item id {item_id} does not exist"))?;
+    let mut item =
+        db::get_item(conn, item_id).not_found(|| format!("Item id {item_id} does not exist"))?;
 
     if let Some(id_) = item.warehouse {
         let msg = if id_ == w_id {
@@ -20,7 +20,10 @@ pub fn warehouse_add_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Resul
         } else {
             format!("Cannot assign item id {item_id} to warehouse id {w_id} as it already belongs to warehouse id {id_}")
         };
-        return Err(Error { code: StatusCode::BAD_REQUEST, msg });
+        return Err(Error {
+            code: StatusCode::BAD_REQUEST,
+            msg,
+        });
     }
 
     // Make the change
@@ -35,10 +38,7 @@ pub fn warehouse_add_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Resul
     if whouse.items.contains(&item_id) {
         return Err(Error {
             code: StatusCode::BAD_REQUEST,
-            msg : format!(
-            "Warehouse id {} already contains item id {}",
-            w_id, item_id
-            )
+            msg: format!("Warehouse id {} already contains item id {}", w_id, item_id),
         });
     }
 
@@ -47,22 +47,22 @@ pub fn warehouse_add_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Resul
 }
 
 pub fn warehouse_remove_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Result<Warehouse> {
-    let mut item = db::get_item(conn, item_id)
-    .not_found(|| format!("Item id {item_id} does not exist"))?;
+    let mut item =
+        db::get_item(conn, item_id).not_found(|| format!("Item id {item_id} does not exist"))?;
 
     if let Some(id_) = item.warehouse {
         if id_ != w_id {
             let msg = format!("Item id {item_id} does not belong to warehouse id {w_id}, belongs to warehouse id {id_}");
             return Err(Error {
                 code: StatusCode::BAD_REQUEST,
-                msg
+                msg,
             });
         }
     } else {
         let msg = format!("Item id {item_id} does not belong to any warehouse");
         return Err(Error {
             code: StatusCode::BAD_REQUEST,
-            msg
+            msg,
         });
     }
 
@@ -71,7 +71,7 @@ pub fn warehouse_remove_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Re
     db::update_item(conn, &item)?;
 
     let mut whouse = db::get_warehouse(conn, w_id)
-    .not_found(|| format!("Warehouse id {w_id} does not exist"))?;
+        .not_found(|| format!("Warehouse id {w_id} does not exist"))?;
 
     let idx = whouse.items.iter().position(|&id_| id_ == item_id);
     if let Some(idx) = idx {
@@ -84,7 +84,7 @@ pub fn warehouse_remove_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Re
             however warehouse id {w_id} does not indicate ownership");
         Err(Error {
             code: StatusCode::INTERNAL_SERVER_ERROR,
-            msg
+            msg,
         })
     }
 }
@@ -104,12 +104,11 @@ pub fn delete_item(conn: &PgConnection, item_id: i32) -> Result<InventoryItem> {
 
 pub fn create_item(conn: &PgConnection, item: &InventoryItem) -> Result<InventoryItem> {
     if let Some(w_id) = item.warehouse {
-            // Check for warehouse existence
-            db::get_warehouse(conn, w_id)
-            .not_found(|| {
-                format!("Cannot create item with warehouse id {w_id}, because it does not exist")
-            })?;
-        }
+        // Check for warehouse existence
+        db::get_warehouse(conn, w_id).not_found(|| {
+            format!("Cannot create item with warehouse id {w_id}, because it does not exist")
+        })?;
+    }
 
     db::insert_item(conn, item)
 }
@@ -119,7 +118,7 @@ pub fn create_warehouse(conn: &PgConnection, whouse: &Warehouse) -> Result<Wareh
         let msg = format!("Warehouse id {} already exists", whouse.id);
         return Err(Error {
             code: StatusCode::BAD_REQUEST,
-            msg
+            msg,
         });
     }
 
@@ -127,7 +126,7 @@ pub fn create_warehouse(conn: &PgConnection, whouse: &Warehouse) -> Result<Wareh
     // Potential concurrency issue?: What if the items are changed between here and adding them to the warehouse?
     for &item_id in &whouse.items {
         let item = db::get_item(conn, item_id)
-        .not_found(|| format!("Cannot create warehouse, item id {item_id} does not exist"))?;
+            .not_found(|| format!("Cannot create warehouse, item id {item_id} does not exist"))?;
 
         if let Some(w_id) = item.warehouse {
             let msg = format!(
@@ -135,7 +134,7 @@ pub fn create_warehouse(conn: &PgConnection, whouse: &Warehouse) -> Result<Wareh
             );
             return Err(Error {
                 code: StatusCode::BAD_REQUEST,
-                msg
+                msg,
             });
         }
     }
@@ -188,16 +187,20 @@ pub fn update_warehouse(_: &PgConnection, _: &Warehouse) -> Result<Warehouse> {
 }
 
 pub fn update_item(conn: &PgConnection, item: &InventoryItem) -> Result<InventoryItem> {
-    let db_item = db::get_item(conn, item.id)
-    .not_found(|| format!("Cannot update item {} as it doesn't exist. Try creating the item instead", item.id))?;
+    let db_item = db::get_item(conn, item.id).not_found(|| {
+        format!(
+            "Cannot update item {} as it doesn't exist. Try creating the item instead",
+            item.id
+        )
+    })?;
 
     // We want to enforce that you can't update an item's warehouse via this endpoint
     if item.warehouse != db_item.warehouse {
         let msg = "Updating an item's warehouse is not supported, use the warehouse item add/remove endpoint".to_string();
         return Err(Error {
             code: StatusCode::BAD_REQUEST,
-            msg
-        })
+            msg,
+        });
     }
 
     // Forward

@@ -1,13 +1,14 @@
-use std::{fmt::Display, str::FromStr, borrow::Cow};
+use std::{fmt::Display, str::FromStr};
 
 use actix_web::http::StatusCode;
 use diesel::{
     backend::Backend,
     pg::Pg,
+    result::DatabaseErrorKind,
     serialize::WriteTuple,
     sql_types::{SmallInt, Text},
     types::{FromSql, Record, ToSql},
-    AsExpression, FromSqlRow, Insertable, Queryable, result::DatabaseErrorInformation,
+    AsExpression, FromSqlRow, Insertable, Queryable,
 };
 
 use crate::schema::{inventory, warehouses};
@@ -20,23 +21,29 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[derive(Debug)]
 pub struct Error {
     pub code: StatusCode,
-    pub msg: String
+    pub msg: String,
 }
 
 impl From<diesel::result::Error> for Error {
     fn from(e: diesel::result::Error) -> Self {
         let (code, msg) = match e {
-            DError::DatabaseError(UniqueViolation, info) => {
-                let msg  = if let Some(col) = info.column_name() {
+            DError::DatabaseError(DatabaseErrorKind::UniqueViolation, info) => {
+                let msg = if let Some(col) = info.column_name() {
                     format!("Uniqueness violation on column {col}; {}", info.message())
                 } else {
                     format!("Uniqueness violation: {}", info.message())
                 };
                 (StatusCode::BAD_REQUEST, msg)
-            },
-            DError::DatabaseError(_, info) => (StatusCode::INTERNAL_SERVER_ERROR, info.message().to_string()),
+            }
+            DError::DatabaseError(_, info) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                info.message().to_string(),
+            ),
             DError::NotFound => (StatusCode::NOT_FOUND, "Item not found".to_string()),
-            _ => (StatusCode::INTERNAL_SERVER_ERROR, "Unknown database error".to_string())
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Unknown database error".to_string(),
+            ),
         };
         Error { code, msg }
     }
@@ -57,13 +64,13 @@ impl<T> NotFound<T> for Result<T> {
                 if e.code == StatusCode::NOT_FOUND {
                     let err = Error {
                         code: StatusCode::NOT_FOUND,
-                        msg: fnmsg()
+                        msg: fnmsg(),
                     };
                     Err(err)
                 } else {
                     Err(e)
                 }
-            },
+            }
         }
     }
 }

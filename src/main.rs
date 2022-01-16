@@ -71,7 +71,7 @@ async fn main() -> std::io::Result<()> {
                             .service(get_warehouse)
                             .service(get_warehouses)
                             .service(delete_warehouse)
-                            .service(update_warehouse)
+                            .service(update_warehouse),
                     ),
             )
     })

@@ -14,7 +14,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     warehouses (id) {
         id -> Int4,
