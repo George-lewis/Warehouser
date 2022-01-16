@@ -279,7 +279,6 @@ pub async fn update_warehouse(
     pool: web::Data<DbPool>,
     data: web::Json<Warehouse>,
 ) -> impl Responder {
-    println!("hi?");
     request(
         pool,
         serde_json::to_string_pretty,
