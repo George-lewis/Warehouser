@@ -211,3 +211,10 @@ pub fn update_item(conn: &PgConnection, item: &InventoryItem) -> Result<Inventor
     // Forward
     db::update_item(conn, item)
 }
+
+pub fn warehouse_get_items(conn: &PgConnection, w_id: i32, limit: i64) -> Result<Vec<InventoryItem>> {
+    let whouse = db::get_warehouse(conn, w_id)
+    .not_found(|| format!("Cannot get items for warehouse id {w_id}, as it does not exist"))?;
+
+    db::get_items_by_id(conn, limit, &whouse.items)
+}
