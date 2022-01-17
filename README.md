@@ -19,37 +19,29 @@ Alright let's get it set up.
 
 ## Setting up
 
-You'll need The Rust Compiler, and Cargo for this project.
-I highly recommend using the Rust toolchain manager, Rustup: https://rustup.rs/
+### Requirements
 
-I built this project on top of Postgresql 14. It may work with earlier versions, but I can't guarantee that.
-So, please install Postgresql if you don't have it: https://www.postgresql.org/download/
+1. You'll need The Rust Compiler and Cargo
+    - I highly recommend the Rust toolchain manager, Rustup for this: https://rustup.rs/
+2. Postgresql 14
+    - https://www.postgresql.org/download/
+    - Please make sure to set up a user account. This can be done with the PgAdmin interface or via SQL
+3. Diesel CLI
+    - Diesel is an ORM for Rust that I'm using, the CLI will set up the tables for us
+    - You can install it from the command line with `cargo install diesel_cli`
 
-Please make sure to set up a PG (Postgresql) user account, we will need it shortly.
-
-I used a Rust ORM for this project called Diesel. It was a minor pain to get working, but after that
-it provided a very nice interface for database interactions.
-Anyway, you're going to need the Diesel CLI.
-You can do so with this command: `cargo install diesel_cli`
-Additional reading: https://diesel.rs/guides/getting-started
-
-Only a few more steps!
-The Diesel CLI will actually create our database for us, but first you need to modify the .env file.
-In there you'll see a string like this:
+We need to set our database url, in the root of the project there's a file `.env` with the follows contents:
 
 `DATABASE_URL=postgres://glewis:glewis@localhost/warehouser`
 
-I need you to replace the first `glewis` with your (PG) account's username, and the second with the password.
-The last bit is the name of the database, feel free to change it, or not.
+Kindly replace the first `glewis` with your account's username, and the second with the password.
 
-Now you can run `diesel setup` from the project root. This should create the database for us and
-run some SQL commands (the ones defined in ./migrations)
-and get us set up.
+Now you can run `diesel setup` from the project root. This will create the database for us and run some SQL commands (as defined in ./migrations).
 
 Okay great, we should be ready to go.
 Go ahead and run `cargo run` in the project root, or `cargo run --release` if you want it to be extra speedy.
 
-Warning: Compiling Rust is very CPU-intensive, this may take a minute, and make your fans spin
+Note: Compiling Rust is very CPU-intensive, this may take a minute, and make your fans spin
 
 If all went well, you should see that the program is running.
 When it starts up it outputs the line "Warehouser Startup!", so you can check to see if it's there.
@@ -65,7 +57,7 @@ If it's a Diesel/database issue, please check your PG install, and the Diesel ge
 
 ## Using it
 
-I have provided a Postman collection and environment for your convenience. Please feel free to import it and test out a few endpoints.
+**I have provided a Postman collection and environment for your convenience**. Please feel free to import it and test out a few endpoints.
 
 The server is hard-coded to bind to `127.0.0.1:8087`, if that doesn't work for you may modify it in `main.rs`.
 
