@@ -37,8 +37,8 @@ pub fn warehouse_add_item(conn: &PgConnection, w_id: i32, item_id: i32) -> Resul
 
     if whouse.items.contains(&item_id) {
         return Err(Error {
-            code: StatusCode::BAD_REQUEST,
-            msg: format!("Warehouse id {} already contains item id {}", w_id, item_id),
+            code: StatusCode::INTERNAL_SERVER_ERROR,
+            msg: format!("INCONSISTENCY IN DATABASE: Item id {item_id} claims it belongs to no warehouse, yet warehouse id {w_id} indicates ownership"),
         });
     }
 
