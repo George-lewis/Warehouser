@@ -30,7 +30,7 @@ Alright let's get it set up.
     - Diesel is an ORM for Rust that I'm using, the CLI will set up the tables for us
     - You can install it from the command line with `cargo install diesel_cli`
 
-We need to set our database url, in the root of the project there's a file `.env` with the follows contents:
+We need to set our database url, in the root of the project there's a file `.env` with the following contents:
 
 `DATABASE_URL=postgres://glewis:glewis@localhost/warehouser`
 
