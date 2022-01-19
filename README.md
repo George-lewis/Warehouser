@@ -57,9 +57,9 @@ If it's a Diesel/database issue, please check your PG install, and the Diesel ge
 
 ## Using it
 
-**I have provided a Postman collection and environment for your convenience**. Please feel free to import it and test out a few endpoints.
+**I have provided a Postman collection and environment for your convenience. Please feel free to import it and test out a few endpoints.**
 
-The server is hard-coded to bind to `127.0.0.1:8087`, if that doesn't work for you may modify it in `main.rs`.
+The server is hard-coded to bind to `127.0.0.1:8087`, if that doesn't work for you, then you may modify it in `main.rs`.
 
 I made up a bit of a schema myself, items have a weight, value, dimensions, id, and so on.
 Using the collection you can create items, delete items, and so on. Please feel free to modify the body json of the create endpoints, and note that you must set the `id` field to be unique for each item/warehouse. If you create and item with the warehouse field filled-in, Warehouser will do some work behind-the-scenes to add the item to the appropriate warehouse (if it exists).
